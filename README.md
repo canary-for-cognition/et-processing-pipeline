@@ -8,6 +8,7 @@ This Repository contains several scripts mostly written by Oswald that are used 
   * A file with the pupil baselines for EMDAT
   * A file that includes the tasks timestamps 
   * A log indicating if there were any errors processing the files, and some stats
+  * Converts the participant log into a csv file
 
 * AOIs --> Folder that contain the information for defining AOIs for the Cookie theft and Reading Tasks. Note that GenerateAuxiliaryFiles.R takes the file under CookieTheft > All_AOIs.txt as input in order to generate its output for EMDAT
 
