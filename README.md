@@ -1,4 +1,4 @@
-# CANARY-EYE_TRACKING
+# ET-Processing-Pipeline
 This Repository contains several scripts mostly written by Oswald that are used to pre- and post - process eye tracking data for the CANARY project
 
 * GenerateAuxiliaryFiles.R --> Script that takes all tobii exports, participantLog, and CookieTheftAoi template as inputs, and generates the following outputs:
