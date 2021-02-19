@@ -7,5 +7,5 @@ This file takes as input the transcripts and raw Eye tracking Data, and generate
 This script generates a single file that includes, for each participant and infounit mentioned, a set of multimodal features. (e..g, latency between mention and gaze on infunit "Boy")
 
 3-Run MultiModalFeaturesSummative.R (Oswald's Script):
-This file generates a single file that includes, for each user a set of features that have been aggregated based on summative statistics of the individual infouint features for each user. (e.g., average latency between mention and gaze for all info units mentioned by a given user)
+This file generates a single file that includes, for each user, a set of features that have been aggregated based on summative statistics of the individual infounit features for each user. (e.g., average latency between mention and gaze for all info units mentioned by a given user)
 
