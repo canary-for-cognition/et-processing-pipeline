@@ -213,12 +213,19 @@ convertTimestampToString <- function(t) {
 }
 
 #Write timestamps of a certain task to deparate file so can be used for transcripts
-writeBips <- function(outfile,pid, dat,d_seg, task) {
+writeBips <- function(outfile,pid, dat,d_seg, task, offset) {
+  #compute timestamps as per the Eye tracking log
   timestampIni <- d_seg$Ini[d_seg$SegID == task]
   timestampEnd <- d_seg$End[d_seg$SegID == task]
+  #compute timestamps of the bips in the synchronized Audio files
+  timestampIni_bip <- timestampIni - offset
+  timestampEnd_bip <- timestampEnd - offset
+  
   cat(paste0(
           paste(pid,task,timestampIni,timestampEnd,
-                convertTimestampToString(timestampIni),convertTimestampToString(timestampEnd),sep=","),
+                convertTimestampToString(timestampIni),convertTimestampToString(timestampEnd),
+                timestampIni_bip,timestampEnd_bip,
+                convertTimestampToString(timestampIni_bip),convertTimestampToString(timestampEnd_bip),sep=","),
           "\n"),
       file =outfile,append = TRUE)
 }
@@ -234,7 +241,7 @@ processSegments <- function () {
   ##Reset output files
   cat ("",file=PREPROCESS_FILE,append=FALSE)
   cat("",file=PUPIL_BASELINES_FILE,append=FALSE)
-  cat ("StudyID,Task,timestampIni,timestampEnd,timeIni,timeEnd\n",
+  cat ("StudyID,Task,timestampIni,timestampEnd,timeIni,timeEnd,timestampIni_bip,timestampEnd_bip,timeIni_bip,timeEnd_bip\n",
        file=BIPS_FILE,append=FALSE)
   
   #count number of files exported from Tobii
@@ -319,12 +326,18 @@ processSegments <- function () {
     cat(paste0(studyId,",",computePupilBaseline(dat,d_seg),"\n"),
         file=PUPIL_BASELINES_FILE,append=TRUE)
   
-  
+    ##find timestamp offset for human-readable bips
+    if (!("Screen Recordings (1)" %in% unique(dat$MediaName))){
+       cat (paste0(f,"Don't have \"Screen Recordings (1)\", cannot compute offset for bips \n"),
+                                                                     file = PREPROCESS_FILE,append=TRUE)
+      offset <- 0
+    } else offset <- dat$RecordingTimestamp[which(dat$MediaName == "Screen Recordings (1)")[1]]
+    
     # Output timestamps for CookieTheft, Reading, and Memory
-    writeBips (BIPS_FILE, studyId,dat,d_seg, "PupilCalib")
-    writeBips (BIPS_FILE, studyId,dat,d_seg, "CookieTheft")
-    writeBips (BIPS_FILE, studyId,dat,d_seg, "Reading")
-    writeBips (BIPS_FILE, studyId,dat,d_seg, "Memory")
+    writeBips (BIPS_FILE, studyId,dat,d_seg, "PupilCalib",offset)
+    writeBips (BIPS_FILE, studyId,dat,d_seg, "CookieTheft",offset)
+    writeBips (BIPS_FILE, studyId,dat,d_seg, "Reading",offset)
+    writeBips (BIPS_FILE, studyId,dat,d_seg, "Memory",offset)
 
     #copy file to PREPROCESS_DIR_DATA
     file.copy(FILEPATH, PREPROCESS_DIR_DATA)
